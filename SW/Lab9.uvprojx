@@ -10,8 +10,8 @@
       <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6160000::V6.16::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>TM4C123GH6PM</Device>
@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>Lab2</OutputName>
+          <OutputName>Lab9</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -189,7 +189,7 @@
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -259,17 +259,17 @@
                 <Size>0x0</Size>
               </XRAM>
               <OCR_RVCT1>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT1>
               <OCR_RVCT2>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT2>
               <OCR_RVCT3>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT3>
@@ -279,7 +279,7 @@
                 <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
-                <Type>0</Type>
+                <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </OCR_RVCT5>
@@ -322,14 +322,14 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>3</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>1</uC99>
-            <uGnu>1</uGnu>
+            <uC99>0</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
-            <v6Lang>1</v6Lang>
-            <v6LangP>1</v6LangP>
+            <v6Lang>3</v6Lang>
+            <v6LangP>3</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
@@ -337,9 +337,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>rvmdk PART_LM4F120H5QR</Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>..\SW</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -352,7 +352,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -361,7 +361,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>0</umfTarg>
+            <umfTarg>1</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -384,54 +384,14 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>Dump.c</FileName>
+              <FileName>Lab9.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\inc\Dump.c</FilePath>
-            </File>
-            <File>
-              <FileName>TExaS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\inc\TExaS.c</FilePath>
-            </File>
-            <File>
-              <FileName>Lab2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Lab2.c</FilePath>
+              <FilePath>.\Lab9.c</FilePath>
             </File>
             <File>
               <FileName>startup.s</FileName>
               <FileType>2</FileType>
               <FilePath>.\inc\startup.s</FilePath>
-            </File>
-            <File>
-              <FileName>ST7735.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\inc\ST7735.c</FilePath>
-            </File>
-            <File>
-              <FileName>PLL.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\inc\PLL.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADCSWTrigger.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\inc\ADCSWTrigger.c</FilePath>
-            </File>
-            <File>
-              <FileName>LaunchPad.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\inc\LaunchPad.c</FilePath>
-            </File>
-            <File>
-              <FileName>Timer0A.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\inc\Timer0A.c</FilePath>
-            </File>
-            <File>
-              <FileName>Timer2A.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\inc\Timer2A.c</FilePath>
             </File>
           </Files>
         </Group>
