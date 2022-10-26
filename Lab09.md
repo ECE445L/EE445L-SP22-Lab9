@@ -66,6 +66,8 @@ The team size is 4
 
 // TODO: get them starter files written
 
+![pic](lab9_layout.svg)
+
 ### Required Hardware
 
 | Part                        | Datasheet                             |
@@ -74,7 +76,7 @@ The team size is 4
 | 8Ω or 32Ω speaker           | N/A                                   |
 | Cell-phone headset (3.5mm)  | N/A                                   |
 | Electret microphone         | [CMA-4544PF-W datasheet](resources/)  |
-| OPA2350PA                   | [OPAx350 datasheet](resources/)      |
+| OPA2350PA                   | [OPAx350 datasheet](resources/)       |
 | TLV5616 12-bit DAC          | [TLV5616 datasheet](resources/)       |
 | LM4041CILPR shunt diode     | [LM4041C datasheet](resources/)       |
 | TPA731 audio amp            | [TPA731 datasheet](resources/)        |
@@ -92,26 +94,52 @@ The team size is 4
 
 ### Choose Encoding/Decoding Scheme
 
+1. Create a rough sketch of the sound waves you plan to use to transmit data
+
 ### Choose Message Format
+
+1. Add something to support error checking (like a checksum or parity bit)
+2. Add something that will allow the receiver to synchronize to the transmitter
+3. How will the receiver separate one bit from another?
+
+*Hint: how does UART separate bits?*
 
 ### Distribute Tasks
 
+
+
 ### Hardware Design
 
+1. 
+
 ### Software Design
+
+1. Design all datastructures, modules, and testing procedures
+2. Write all header files and structs
+3. 
 
 ---
 
 ## Procedure
 
+1. Each of the modules should be implemented and tested separately
+2. Test just the transmitter
+
 ---
 
 ## Checkout
+
+
 
 ---
 
 ## Report
 
+
+
 ### Deliverables
 
+
+
 ### Analysis and Discussion Questions
+
