@@ -42,7 +42,7 @@ files we don't care about, but sometimes other stuff (like .lib files) falls thr
 
 ### Goals
 
-1. Study ADC conversino and the Nyquist Theorem
+1. Study ADC conversion and the Nyquist Theorem
 2. Characterize the performance of the DAC and ADC
 3. Encode information as a sound output from a DAC to a speaker
 4. Decode information from a sound input from a microphone to an ADC
@@ -66,8 +66,6 @@ The team size is 4
 
 // TODO: get them starter files written
 
-![pic](lab9_layout.svg)
-
 ### Required Hardware
 
 | Part                        | Datasheet                             |
@@ -84,6 +82,72 @@ The team size is 4
 | Resistors and capacitors    | N/A                                   |
 
 ### Background
+
+#### Concepts
+
+This lab introduces the student to the field of audio signal processing. According to [Wikipedia](https://en.wikipedia.org/wiki/Audio_signal_processing):
+
+> Audio signal processing is a subfield of signal processing that is concerned with the electronic manipulation of audio signals. Audio signals are electronic representations of sound waves—longitudinal waves which travel through air, consisting of compressions and rarefactions. The energy contained in audio signals is typically measured in decibels. As audio signals may be represented in either digital or analog format, processing may occur in either domain. Analog processors operate directly on the electrical signal, while digital processors operate mathematically on its digital representation.
+
+These signals are in the range of 200Hz to 16000Hz and include speech and musical instruments. We will be processing the signals in the digital domain, therefore we need to convert them from the analog domain to the digital domain.
+
+TODO: decide between the two
+
+The Nyquist Theorem specifies that an analog signal waveform can be converted into digital by sampling the analog signal at equal to, or greater than, twice the highest frequency component in the analog signal.
+
+The Nyquist Theorem specifies that in order to reproduce an analog signal from a digital signal we need to use greater than a 2x sampling frequency during the analog to digital conversion process.
+
+What is the Valvano Postulate?
+
+#### Communication System
+
+![Figure 9.1](resources/figures/figure_9.1.jpg)
+
+*Figure 9.TODO: data-flow diagram for the communication system*
+
+##### Input
+
+The input to the system can arrive whatever source you wish, as long as the human operator controls the values in some fashion. You could input characters from the PC keyboard and input them into the microcontroller using UART. You could input data from switches. The input task must run in the background using interrupts. Think about the appropriate priority level for this task.
+
+##### Input -> Encoder
+
+The linkage between these modules must include a data structure that supports streaming, such as a FIFO or double buffer. A level of abstraction must be created by designing a set (two or more) of public functions the input module can call to affect communication.
+
+##### Encoder
+
+Each communication effort will involve a message, which includes data, synchronization, and error checking. You are free to create whatever encoding mechanism you wish. However, consider encoding each n-bit symbol as a specific frequency output for a fixed time (frequency modulation). One of the challenges will be synchronize the receiver to the transmitter. Even if the receiver knows you are sending a symbol encoding 2 bits of data every 10 ms, how does the receiver know where symbol ends and the next symbol starts? Consider a protocol where subsequent symbols always switch frequencies, even if the data were to remain constant. In Lab 5, recall that you set up a free running sine wave routine that can generate a wide range of sounds from 300 Hz to 1000 Hz. You will use that capability to encode data using sine waves (300 Hz and 1000 Hz). There are no particular requirements to maximize bandwidth (information/sec), minimize latency (time from input to output), or eliminate errors (sound noise causing bits to flip). However, you will be asked to quantify each of these performance measures and discuss in your report how each could have been improved. The encoder task also runs in the background using interrupts. Think about the appropriate priority level for this task. Remember there is a streaming data structure, so this interrupt task is different from the input task.
+
+##### Encoder -> DAC
+
+The encoded message is sent to the DAC module in an appropriate manner that you will design. For example it might be an array of frequencies. The linkage between these modules also must include a data structure that supports streaming. However, you may wish to place all transmission tasks (encoder and DAC) into the same software file.
+
+##### DAC
+
+Please use as much of your Lab-5 as possible, because the DAC does output to the speaker to send data across the communication channel. Since this interrupt will be high frequency, make sure it is very simple. Think about the appropriate priority level for this task.
+
+##### DAC -> ADC
+
+**There must be a software disconnect between the transmitter tasks (input, encoder, and DAC) from the receiver tasks (ADC, decode, display).** There can be no shared data or function calls between them. The only linkage should be sound traveling as air pressure.
+
+##### ADC
+
+The audio input is filtered and then sampled by an ADC. The sampling rate is controlled by a periodic timer that triggers the ADC, and the ADC ISR executes when the conversion is complete. Because the timer starts the ADC, there is no sampling jitter. Think about the appropriate priority level for this task. How does the timer-triggered sampling affect the selection of priority for this ISR? Since this interrupt will also be high frequency, make sure it is very simple. However, you should implement digital filtering here to improve SNR. A fast nonlinear digital filter to remove noise was presented in slides 7-9 in [`aLec49b_SoundInput.pptx`](resources/lectures/aLec49b_SoundInput.pptx).
+
+##### ADC -> Decoder
+
+The linkage between these modules also must include a data structure that supports streaming.
+
+##### Decoder
+
+You can run the decoder in the while-loop of main. The goal is to extract the data from the sampled sound. The system is considered real time if the software is fast enough to keep up (no data is lost). If the decoder cannot keep, up you can slow down the transmission rate or use a simpler decoding algorithm. Possibilities include but are not limited to: cross correlation and FFT. Cross correlation was presented in slides 6 and 11 in [`aLec49b_SoundInput.pptx`](resources/lectures/aLec49b_SoundInput.pptx). FFT was presented in [`aLec49c_FFT.pptx`](resources/lectures/aLec49c_FFT.pptx). There are three very fast integer FFT functions in the `inc` folder of the starter projects: [`cr4_fft_64_stm32.s`](sw/inc/cr4_fft_64_stm32.s), [`cr4_fft_256_stm32.s`](sw/inc/cr4_fft_256_stm32.s) [`cr4_fft_1024_stm32.s`](sw/inc/cr4_fft_1024_stm32.s).
+
+##### Decoder -> Display
+
+The linkage between these modules can be a simple function call.
+
+##### Display
+
+This task is run from the main program. It outputs the data to the human operator. The output can use whatever device you wish, as long as the human operator obverse the values in some fashion. You could output characters on the LCD. You could output data to LEDs. You should not use `UART0` to output if you used `UART0` to input, because that couples the transmitter to the receiver. During testing, when the input is created with data of known values, the output can check for lost or changed values.
 
 ---
 
@@ -106,17 +170,47 @@ The team size is 4
 
 ### Distribute Tasks
 
+1. The work must be distributed equally amongst the team members
+2. Possible tasks include:
 
+| Task                              | Description                                                                                                              |
+|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| System Design and Integration     | Design of the encoding and decoding algorithm                                                                            |
+| Input                             | Interface hardware, low-level software drivers, a main program to test the streaming                                     |
+| Input -> Encoder                  | Streaming data structure, `.c` and `.h` files, a main program to test the streaming                                      |
+| Encoder                           | Software to implement encoding                                                                                           |
+| Encoder -> DAC                    | Streaming data structure, `.c` and `.h` files, a main program to test the streaming                                      |
+| DAC Hardware                      | Interface the DAC, amplifier, and speaker                                                                                |
+| DAC Software                      | ISR that reads from the appropriate data structure and writes to the DAC                                                 |
+| Transmitter Testing               | A main program to test the behavior of the transmitter                                                                   |
+| Microphone Amplifier Hardware     | Design and build the sound input hardware                                                                                |
+| ADC Software                      | ISR that reads from the ADC and writes to the appropriate data structure, a main program to test the ADC input software  |
+| ADC -> Decoder                    | Streaming data structure, `.c` and `.h` files, a main program to test the streaming                                      |
+| Decoder                           | Method and software to implement signal processing like cross correlation or FFT, a main program to test the encoder     |
+| Display                           | Interface hardware, low-level software drivers, a main program to test the streaming                                     |
+| System Performance Measurements   | Final system performance testing (bandwidth, latency, reliability)                                                       |
 
 ### Hardware Design
 
-1. 
+1. Collect all hardware components
+2. Draw all circuit diagrams
+
+![]()
+
+![]()
 
 ### Software Design
 
-1. Design all datastructures, modules, and testing procedures
+1. Design all data structures, modules, and testing procedures
 2. Write all header files and structs
-3. 
+
+### Preparation Deliverables
+
+1. Sketch of the encoding/decoding scheme
+2. Explanation of the method format
+3. List of distributed tasks
+4. `.sch` files for both the encoding and decoding systems
+5. `.h` files and structs
 
 ---
 
@@ -129,7 +223,10 @@ The team size is 4
 
 ## Checkout
 
-
+1. Demonstrate the system with a known input and input rate
+   1. Show scope on the DAC output
+   2. Show scope on the ADC input
+2. Demonstrate the system with user input
 
 ---
 
@@ -139,7 +236,20 @@ The team size is 4
 
 ### Deliverables
 
-
+1. Objectives (1/2 page maximum)
+2. Hardware design (schematics of both the encode and decoder systems)
+3. Software design
+   1. Data flow graph if different from *Figure TODO:*
+4. Performance data
+   1. DAC output spectrum of a single tone
+      1. Calculate SNR
+   2. DAC scope of an encoded message
+   3. ADC input spectrum of a single tone
+   4. Typical sampled ADc data
 
 ### Analysis and Discussion Questions
 
+1. What is the Nyquist theorem and how does it apply to this lab?
+2. How did you eliminate noise in the sampled audio?
+3. How does your protocol allow (or doesn't allow) communication in the presence of background speech and singing?
+4. How could bandwidth have been improved?

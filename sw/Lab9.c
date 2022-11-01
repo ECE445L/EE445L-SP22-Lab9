@@ -1,6 +1,6 @@
 /**
  * @file Lab9.c
- * @author your name (you@domain.com), Jonathan Valvano, Matthew Yu
+ * @author your name (you@domain.com), Jonathan Valvano, Matthew Yu, Jared McArthur
  *    <TA NAME and LAB SECTION # HERE>
  * @brief
  *    Possible main programs to test Lab 9. Feel free to edit this to match your
@@ -16,7 +16,15 @@
  * @date 2022-03-28
  * 
  * @copyright Copyright (c) 2022
- * @note Modify __MAIN__ on L23 to determine which main method is executed.
+ */
+
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "inc/RegDefs.h"
+
+/**
+ * @note Modify __MAIN__ on L29 to determine which main method is executed.
  *   __MAIN__ = 0 - Test the input task.
  *              1 - Test the encoder.
  *              2 - Test the transmitting FIFO.
@@ -32,16 +40,26 @@
  */
 #define __MAIN__ 0
 
-#include <stdbool.h>
-#include <stdint.h>
+/* Include relevant files for the encoder depending on the value of __MAIN__ */
+#if __MAIN__ >= 2 && __MAIN__ <= 5
+    #include "lib/encoder/switches/switches.h"
+    #include "lib/encoder/tlv5616/tlv5616.h"
+    /* include other encoder files here */
+#endif
 
-#include "inc/RegDefs.h"
+/* Include relevant files for the decoder depending on the value of __MAIN__ */
+#if __MAIN__ >= 6 && __MAIN__ <= 9
+    #include "lib/decoder/adc/adc.h"
+    #include "lib/decoder/display/display.h"
+    #include "lib/fft/fft.h"
+    /* include other decoder files here */
+#endif
 
 void assert(bool result) {
     /* Initialize PF1 (Red) or PF3 (Green) based on result and turn it on. */
     if (!result) {
-        uint32_t portOffset = (((41 - (1 << 5)) >> 3) << 12) + (1 << 17);
-        uint8_t pinAddress = 1 << 41 % 8;
+        uint32_t port_offset = (((41 - (1 << 5)) >> 3) << 12) + (1 << 17);
+        uint8_t pin_address = 1 << 41 % 8;
 
         /* Activate the clock for Port F. */
         GET_REG(SYSCTL_BASE + SYSCTL_RCGCGPIO_OFFSET) |=
@@ -52,38 +70,38 @@ void assert(bool result) {
            (1 << (41 / 8))) == 0);
 
         /* Allow changes to selected pin. */
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_CR_OFFSET) |= pinAddress;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_CR_OFFSET) |= pin_address;
 
         /* Set pin to output. */
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_DIR_OFFSET) |= pinAddress;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DIR_OFFSET) |= pin_address;
 
         /* Set as digital pin. */
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_AMSEL_OFFSET) &= ~pinAddress;
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_DEN_OFFSET) |= pinAddress;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_AMSEL_OFFSET) &= ~pin_address;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DEN_OFFSET) |= pin_address;
 
         /* Turn pin on. */
         GET_REG(0x40025008) = 1 << 1;
     } else {
-        uint32_t portOffset = (((43 - (1 << 5)) >> 3) << 12) + (1 << 17);
-        uint8_t pinAddress = 1 << 43 % 8;
+        uint32_t port_offset = (((43 - (1 << 5)) >> 3) << 12) + (1 << 17);
+        uint8_t pin_address = 1 << 43 % 8;
 
         /* Activate the clock for Port F. */
         GET_REG(SYSCTL_BASE + SYSCTL_RCGCGPIO_OFFSET) |=
             1 << (43 / 8); /* 8 pins per port. */
-        
+
         /* Stall until clock is ready. */
         while ((GET_REG(SYSCTL_BASE + SYSCTL_PRGPIO_OFFSET) &
            (1 << (43 / 8))) == 0);
 
         /* Allow changes to selected pin. */
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_CR_OFFSET) |= pinAddress;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_CR_OFFSET) |= pin_address;
 
         /* Set pin to output. */
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_DIR_OFFSET) |= pinAddress;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DIR_OFFSET) |= pin_address;
 
         /* Set as digital pin. */
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_AMSEL_OFFSET) &= ~pinAddress;
-        GET_REG(GPIO_PORT_BASE + portOffset + GPIO_DEN_OFFSET) |= pinAddress;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_AMSEL_OFFSET) &= ~pin_address;
+        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DEN_OFFSET) |= pin_address;
 
         GET_REG(0x40025020) = 1 << 3;
     }
@@ -169,11 +187,11 @@ void assert(bool result) {
     }
 #elif __MAIN__ == 3
     /* TODO: Set up the required data structures here. Globals and consts only. */
-    const uint8_t sineWave[32] = {
-        0, 1, 2, 3, 4, 5, 6, 7,
-        8, 9,10,11,12,13,14,15,
-        16,17,18,19,20,21,22,23,
-        24,25,26,27,28,29,30,31
+    const uint8_t sine_wave[32] = {
+        0x800, 0x98f, 0xb0f, 0xc71, 0xda7, 0xea6, 0xf63, 0xfd8,
+        0xfff, 0xfd8, 0xf63, 0xea6, 0xda7, 0xc71, 0xb0f, 0x98f,
+        0x800, 0x670, 0x4f0, 0x38e, 0x258, 0x159, 0x09c, 0x027,
+        0x000, 0x027, 0x09c, 0x159, 0x258, 0x38e, 0x4f0, 0x670
     };
 
     /**
@@ -181,10 +199,10 @@ void assert(bool result) {
      * speaker.
      */
     void DACTask(void) {
-        static uint8_t sineWaveIdx = 0;
-        /* TODO: output sineWave[sineWaveIdx] to the DAC. */
+        static uint8_t sine_wave_idx = 0;
+        /* TODO: output sine_wave[sine_wave_idx] to the DAC. */
 
-        sineWaveIdx = (sineWaveIdx + 1) % 32;
+        sine_wave_idx = (sine_wave_idx + 1) % 32;
     }
 
     /**
@@ -230,8 +248,8 @@ void assert(bool result) {
 #elif __MAIN__ == 5
     /* TODO: Set up the required data structures here. Globals and consts only. */
     #define BUFFER_SIZE 512
-    uint16_t captureBuffer[512] = { 0 };
-    uint16_t captureIdx = 0;
+    uint16_t capture_buffer[512] = { 0 };
+    uint16_t capture_idx = 0;
     bool result = false;
 
     /**
@@ -242,9 +260,9 @@ void assert(bool result) {
      */
     void ADCTask(void) {
         /* TODO: Capture ADC values from the microphone and add it to the
-        captureBuffer. */
+        capture_buffer. */
 
-        captureIdx = (captureIdx + 1) % BUFFER_SIZE;
+        capture_idx = (capture_idx + 1) % BUFFER_SIZE;
     }
 
     /**
@@ -255,8 +273,8 @@ void assert(bool result) {
         /* TODO: Set up the required initializations here.*/
 
         while (1) {
-            if (captureIdx == BUFFER_SIZE - 1) {
-                /* TODO: Perform FFT on captureBuffer and evaluate results. */
+            if (capture_idx == BUFFER_SIZE - 1) {
+                /* TODO: Perform FFT on capture_buffer and evaluate results. */
 
                 /* Turn on green LED if we pass this test. Turn on red LED if we fail
                     this test. */
@@ -291,8 +309,8 @@ void assert(bool result) {
 #elif __MAIN__ == 7
     /* TODO: Set up the required data structures here. Globals and consts only. */
     #define BUFFER_SIZE 512
-    uint16_t captureBuffer[512] = { 0 };
-    uint16_t captureIdx = 0;
+    uint16_t capture_buffer[512] = { 0 };
+    uint16_t capture_idx = 0;
     bool result = false;
 
     /**
@@ -300,10 +318,10 @@ void assert(bool result) {
      * task should decode the data.
      */
     void ADCTask(void) {
-        /* TODO: Load into captureBuffer some arbitrary waveform data. (Ideally with
+        /* TODO: Load into capture_buffer some arbitrary waveform data. (Ideally with
         fake pseudonoise) */
 
-        captureIdx = (captureIdx + 1) % BUFFER_SIZE;
+        capture_idx = (capture_idx + 1) % BUFFER_SIZE;
 
         /* TODO: If we hit some condition, decode the buffer of data. */
 
@@ -347,8 +365,8 @@ void assert(bool result) {
 #elif __MAIN__ == 9
     /* TODO: Set up the required data structures here. Globals and consts only. */
     #define BUFFER_SIZE 512
-    uint16_t captureBuffer[512] = { 0 };
-    uint16_t captureIdx = 0;
+    uint16_t capture_buffer[512] = { 0 };
+    uint16_t capture_idx = 0;
 
     /**
      * @brief ADCTask executes at a fixed rate to capture the analog voltage from
@@ -357,9 +375,9 @@ void assert(bool result) {
      */
     void ADCTask(void) {
         /* TODO: Capture ADC values from the microphone and add it to the
-        captureBuffer. */
+        capture_buffer. */
 
-        captureIdx = (captureIdx + 1) % BUFFER_SIZE;
+        capture_idx = (capture_idx + 1) % BUFFER_SIZE;
 
         /* TODO: If we hit some condition, decode the buffer of data. */
 
