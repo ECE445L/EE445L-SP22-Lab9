@@ -208,7 +208,7 @@ This task is run from the main program. It outputs the data to the human operato
    1. Frequency modulation:
       1. `0`: low frequency
       2. `1`: high frequency
-   2. Ampliture modulation:
+   2. Amplitude modulation:
       1. `0`: low amplitude
       2. `1`: high amplitude
 
