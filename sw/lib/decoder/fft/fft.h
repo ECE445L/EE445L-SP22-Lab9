@@ -16,23 +16,23 @@
 /**
  * @brief Fast fourier transform with 64 elements
  * 
- * @param in input buffer (64 elements)
- * @param out output buffer (64 elements)
+ * @param in    input buffer (64 elements)
+ * @param out   output buffer (64 elements)
  */
 void fft_64(uint16_t in[], uint16_t out[]);
 
 /**
- * @brief Fast fourier transform with 256 elements
+ * @brief Fast fourier transform with 256 elements.
  * 
- * @param in input buffer (64 elements)
- * @param out outpur buffer (64 elements)
+ * @param in    input buffer (256 elements)
+ * @param out   outpur buffer (256 elements)
  */
 void fft_256(uint16_t in[], uint16_t out[]);
 
 /**
- * @brief Fast fourier transform with 1024 elements
+ * @brief Fast fourier transform with 1024 elements.
  * 
- * @param in input buffer (64 elements)
- * @param out output buffer (64 elements)
+ * @param in    input buffer (1024 elements)
+ * @param out   output buffer (1024 elements)
  */
 void fft_1024(uint16_t in[], uint16_t out[]);

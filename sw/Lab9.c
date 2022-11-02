@@ -3,7 +3,7 @@
  * @author your name (you@domain.com), Jonathan Valvano, Matthew Yu, Jared McArthur
  *    <TA NAME and LAB SECTION # HERE>
  * @brief
- *    Possible main programs to test Lab 9. Feel free to edit this to match your
+ *    Possible main programs to run Lab 9. Feel free to edit this to match your
  *    specifications.
  * 
  *    For this lab, the students must implement the following communication pipeline:
@@ -13,392 +13,53 @@
  *     information over the speaker. They need to be able to discuss and profile
  *     the execution latency, bandwidth, and SNR of their implementation.
  * @version 0.1
- * @date 2022-03-28
+ * @date 2022-11-01
  * 
  * @copyright Copyright (c) 2022
  */
 
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "inc/RegDefs.h"
-
 /**
- * @note Modify __MAIN__ on L29 to determine which main method is executed.
- *   __MAIN__ = 0 - Test the input task.
- *              1 - Test the encoder.
- *              2 - Test the transmitting FIFO.
- *              3 - Test the DAC.
- *   CHECKPOINT 4 - Test integration of the input to the DAC speaker. This is
- *                  the end of part A. Keep this flashed on one launchpad setup.
- *              5 - Test the ADC input software for the microphone.
- *              6 - Test the decoder.
- *              7 - Test the receiving FIFO.
- *              8 - Test the display.
- *   CHECKPOINT 9 - Test integration of the microphone ADC to the display. This
- *                  is the end of Part B. Flash this on the other launchpad setup.
+ * @note Modify __MAIN__ on L41 to determine which main method is executed.
+ *   __MAIN__ = 0 or ENCODER - run the encoder main
+ *              1 or DECODER - run the decoder main
  */
-#define __MAIN__ 0
+#define ENCODER 0
+#define DECODER 1
+#define __MAIN__ ENCODER
 
 /* Include relevant files for the encoder depending on the value of __MAIN__ */
-#if __MAIN__ >= 2 && __MAIN__ <= 5
+#if __MAIN__ == ENCODER
+    /* you can include/uninclude encoder files as you see fit here */
     #include "lib/encoder/switches/switches.h"
     #include "lib/encoder/tlv5616/tlv5616.h"
-    /* include other encoder files here */
-#endif
-
-/* Include relevant files for the decoder depending on the value of __MAIN__ */
-#if __MAIN__ >= 6 && __MAIN__ <= 9
+#elif __MAIN__ == DECODER
+    /* you can include/uninclude encoder files as you see fit here */
     #include "lib/decoder/adc/adc.h"
     #include "lib/decoder/display/display.h"
     #include "lib/fft/fft.h"
-    /* include other decoder files here */
 #endif
 
-void assert(bool result) {
-    /* Initialize PF1 (Red) or PF3 (Green) based on result and turn it on. */
-    if (!result) {
-        uint32_t port_offset = (((41 - (1 << 5)) >> 3) << 12) + (1 << 17);
-        uint8_t pin_address = 1 << 41 % 8;
-
-        /* Activate the clock for Port F. */
-        GET_REG(SYSCTL_BASE + SYSCTL_RCGCGPIO_OFFSET) |=
-            1 << (41 / 8); /* 8 pins per port. */
-
-        /* Stall until clock is ready. */
-        while ((GET_REG(SYSCTL_BASE + SYSCTL_PRGPIO_OFFSET) &
-           (1 << (41 / 8))) == 0);
-
-        /* Allow changes to selected pin. */
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_CR_OFFSET) |= pin_address;
-
-        /* Set pin to output. */
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DIR_OFFSET) |= pin_address;
-
-        /* Set as digital pin. */
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_AMSEL_OFFSET) &= ~pin_address;
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DEN_OFFSET) |= pin_address;
-
-        /* Turn pin on. */
-        GET_REG(0x40025008) = 1 << 1;
-    } else {
-        uint32_t port_offset = (((43 - (1 << 5)) >> 3) << 12) + (1 << 17);
-        uint8_t pin_address = 1 << 43 % 8;
-
-        /* Activate the clock for Port F. */
-        GET_REG(SYSCTL_BASE + SYSCTL_RCGCGPIO_OFFSET) |=
-            1 << (43 / 8); /* 8 pins per port. */
-
-        /* Stall until clock is ready. */
-        while ((GET_REG(SYSCTL_BASE + SYSCTL_PRGPIO_OFFSET) &
-           (1 << (43 / 8))) == 0);
-
-        /* Allow changes to selected pin. */
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_CR_OFFSET) |= pin_address;
-
-        /* Set pin to output. */
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DIR_OFFSET) |= pin_address;
-
-        /* Set as digital pin. */
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_AMSEL_OFFSET) &= ~pin_address;
-        GET_REG(GPIO_PORT_BASE + port_offset + GPIO_DEN_OFFSET) |= pin_address;
-
-        GET_REG(0x40025020) = 1 << 3;
-    }
-}
-
-#if __MAIN__ == 0
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    bool result = false;
-
+#if __MAIN__ == ENCODER
     /**
-     * @brief Main 0 tests the input task. The students should develop code to test
-     * entering in some data into their program through external input hardware and
-     * checking to see if it matches the expected input.
+     * @brief Runs the encoder. Flash this code to one system.
      */
     int main(void) {
-        /* TODO: Set up the required initializations here.*/
+        /* TODO: Set up the required initializations here. */
 
         while (1) {
-            /* TODO: Poll for user input. */
-
-            /* TODO: Check if user input matches as expected. */
-
-            /* Turn on green LED if we pass this test. Turn on red LED if we fail
-            this test. */
-            assert(result);
+            /* TODO: Encoder main loop. */
         }
     }
-#elif __MAIN__ == 1
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    bool result = true;
-
+#elif __MAIN__ == DECODER
     /**
-     * @brief Main 1 tests the encoder task. Students should develop code that takes
-     * some arbitrary data and feeds it into the encoder, and check to see if the
-     * encoded data matches the expected output.
+     * @brief Runs the decoder. Flash this code to a different system
+     * than the encoder's system.
      */
     int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        /* TODO: Create your arbitrary data to encode here. */
+        /* TODO: Set up the required initializations here. */
 
         while (1) {
-            /* TODO: Feed the input data into the encoder. */
-
-            /* TODO: Check if encoder output matches as expected. */
-
-            /* Turn on green LED if we pass this test. Turn on red LED if we fail
-            this test. */
-            assert(result);
-        }
-    }
-#elif __MAIN__ == 2
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    bool result = false;
-
-    /**
-     * @brief DACTask executes at a fixed rate and grabs an entry from the FIFO. If
-     * it gets an entry, output to the speaker.
-     */
-    void DACTask(void) {
-        /* TODO: Check to see after X calls that all encoded data shows up here. */
-
-        /* Turn on green LED if we pass this test. Turn on red LED if we fail
-            this test. */
-        assert(result);
-    }
-
-    /**
-     * @brief Main 2 tests the streaming of the encoder to the DAC task. The encoder
-     * loads encoded data into a FIFO, and the DACTask should retrieve that data at
-     * a fixed rate.
-     */
-    int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        /* TODO: Create your arbitrary data to encode here. */
-
-        while (1) {
-            /* TODO: Feed the input data into the encoder. */
-
-            /* TODO: Feed the encoded data into a FIFO. */
-        }
-    }
-#elif __MAIN__ == 3
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    const uint8_t sine_wave[32] = {
-        0x800, 0x98f, 0xb0f, 0xc71, 0xda7, 0xea6, 0xf63, 0xfd8,
-        0xfff, 0xfd8, 0xf63, 0xea6, 0xda7, 0xc71, 0xb0f, 0x98f,
-        0x800, 0x670, 0x4f0, 0x38e, 0x258, 0x159, 0x09c, 0x027,
-        0x000, 0x027, 0x09c, 0x159, 0x258, 0x38e, 0x4f0, 0x670
-    };
-
-    /**
-     * @brief DACTask executes at a fixed rate and outputs a sine wave to the
-     * speaker.
-     */
-    void DACTask(void) {
-        static uint8_t sine_wave_idx = 0;
-        /* TODO: output sine_wave[sine_wave_idx] to the DAC. */
-
-        sine_wave_idx = (sine_wave_idx + 1) % 32;
-    }
-
-    /**
-     * @brief Main 3 tests the DAC and speaker operation. A sine wave is fed into
-     * the DAC and should be audible over the speaker.
-     */
-    int main(void) {
-        while (1) {
-            bool _ = true;
-        }
-    }
-#elif __MAIN__ == 4
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-
-    /**
-     * @brief DACTask executes at a fixed rate and grabs an entry from the FIFO. If
-     * it gets an entry, output to the speaker.
-     */
-    void DACTask(void) {
-        /* TODO: Grab encoded data from the FIFO. */
-
-        /* TODO: Output encoded data to the speaker. */
-    }
-
-    /**
-     * @brief Main 4 tests the transmit pipeline of the lab. The user inputs some
-     * data, the encoder loads the encoded data into a FIFO, and the DACTask should
-     * retrieve that data at a fixed rate and output it to the speaker.
-     */
-    int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        /* TODO: Create your arbitrary data to encode here. */
-
-        while (1) {
-            /* TODO: Poll for user input. */
-
-            /* TODO: Feed the input data into the encoder. */
-
-            /* TODO: Feed the encoded data into a FIFO. */
-        }
-    }
-#elif __MAIN__ == 5
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    #define BUFFER_SIZE 512
-    uint16_t capture_buffer[512] = { 0 };
-    uint16_t capture_idx = 0;
-    bool result = false;
-
-    /**
-     * @brief ADCTask executes at a fixed rate to capture the analog voltage from
-     * the electret microphone. The task should perform an FFT on the data and see
-     * if the frequency plot matches the expectation.
-     *
-     */
-    void ADCTask(void) {
-        /* TODO: Capture ADC values from the microphone and add it to the
-        capture_buffer. */
-
-        capture_idx = (capture_idx + 1) % BUFFER_SIZE;
-    }
-
-    /**
-     * @brief Main 5 tests capturing audio output into the speaker. The students
-     * should develop code to capture and log some frequency input into a buffer.
-     */
-    int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        while (1) {
-            if (capture_idx == BUFFER_SIZE - 1) {
-                /* TODO: Perform FFT on capture_buffer and evaluate results. */
-
-                /* Turn on green LED if we pass this test. Turn on red LED if we fail
-                    this test. */
-                assert(result);
-            }
-        }
-    }
-#elif __MAIN__ == 6
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    bool result = true;
-
-    /**
-     * @brief Main 6 tests the decoder task. Students should develop code that takes
-     * some arbitrary waveform data and feeds it into the decoder, and check to see
-     * if the decoded data matches the expected output.
-     */
-    int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        /* TODO: Create your arbitrary data to decode here. */
-
-        while (1) {
-            /* TODO: Feed the input data into the decoder. */
-
-            /* TODO: Check if decoder output matches as expected. */
-
-            /* Turn on green LED if we pass this test. Turn on red LED if we fail
-            this test. */
-            assert(result);
-        }
-    }
-#elif __MAIN__ == 7
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    #define BUFFER_SIZE 512
-    uint16_t capture_buffer[512] = { 0 };
-    uint16_t capture_idx = 0;
-    bool result = false;
-
-    /**
-     * @brief ADCTask executes at a fixed rate to capture some arbitrary data. The
-     * task should decode the data.
-     */
-    void ADCTask(void) {
-        /* TODO: Load into capture_buffer some arbitrary waveform data. (Ideally with
-        fake pseudonoise) */
-
-        capture_idx = (capture_idx + 1) % BUFFER_SIZE;
-
-        /* TODO: If we hit some condition, decode the buffer of data. */
-
-        /* TODO: Feed the decoded data into a FIFO. */
-
-    }
-
-    /**
-     * @brief Main 7 tests capturing arbitrary waveform data, decoding it, and
-     * sending it to the main thread.
-     */
-    int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        while (1) {
-                /* TODO: Capture decoded data from a FIFO. */
-
-                /* TODO: Check to see if each piece of decoded data is expected. */
-
-                /* Turn on green LED if we pass this test. Turn on red LED if we fail
-                    this test. */
-                assert(result);
-        }
-    }
-#elif __MAIN__ == 8
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-
-    /**
-     * @brief Main 8 tests outputting decoded data to the LCD TFT.
-     */
-    int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        /* TODO: Create your arbitrary data to display here. */
-
-        while (1) {
-            /* TODO: Feed the decoded data into the LCD. Visually inspect the
-                display to see if it looks correct. */
-        }
-    }
-#elif __MAIN__ == 9
-    /* TODO: Set up the required data structures here. Globals and consts only. */
-    #define BUFFER_SIZE 512
-    uint16_t capture_buffer[512] = { 0 };
-    uint16_t capture_idx = 0;
-
-    /**
-     * @brief ADCTask executes at a fixed rate to capture the analog voltage from
-     * the electret microphone. The task should decode the waveform and output the
-     * decoded data to a FIFO.
-     */
-    void ADCTask(void) {
-        /* TODO: Capture ADC values from the microphone and add it to the
-        capture_buffer. */
-
-        capture_idx = (capture_idx + 1) % BUFFER_SIZE;
-
-        /* TODO: If we hit some condition, decode the buffer of data. */
-
-        /* TODO: Feed the decoded data into a FIFO. */
-
-    }
-
-    /**
-     * @brief Main 9 tests the receive pipeline of the lab. The user captures some
-     * audio in ADCTask, the decoder decodes the waveform and puts the decoded data
-     * into a FIFO, and the main thread takes decoded data from the FIFO and outputs
-     * it to the display.
-     */
-    int main(void) {
-        /* TODO: Set up the required initializations here.*/
-
-        while (1) {
-            /* TODO: Capture decoded data from a FIFO. */
-
-            /* TODO: Feed the decoded data into the LCD. Visually inspect the
-                display to see if it looks correct. */
+            /* TODO: Decoder main loop. */
         }
     }
 #endif

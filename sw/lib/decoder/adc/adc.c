@@ -10,11 +10,3 @@
  */
 
 #include "adc.h"
-
-int adc_init(void) {
-    return 1;
-}
-
-int adc_get(void) {
-    return 0;
-}

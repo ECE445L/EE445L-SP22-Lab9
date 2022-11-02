@@ -11,23 +11,3 @@
  */
 
 #include "tlv5616.h"
-#include "inc/tm4c123gh6pm.h"
-
-int tlv5616_init(void) {
-    /**
-     * Unified_Port_Init in Lab5.c calls Port_D_Init, which initializes the Port
-     * D GPIOs for the appropriate alternate functionality (SSI).
-     *
-     * According to Table 15-1. SSI Signals in the datasheet, this corresponds
-     * to SSI1. The corresponding Valvanoware register defines are at L302 and
-     * L2670 in inc/tm4c123gh6pm.h. Use this in combination with the datasheet
-     * or any existing code to write your driver! An example of how to
-     * initialize SSI is found in L741 in inc/ST7735.c.
-     */
-    return 1; // UNIMPLEMENTED
-}
-
-int tlv5616_output(uint16_t data) {
-    // An example of how to send data via SSI is found in L534 of inc/ST7735.c.
-    return 1; // UNIMPLEMENTED
-}
