@@ -14,8 +14,8 @@
 #include <stdint.h>
 
 /** If the input data to an FFT is real-valued (as most real-world data is), you
- * can either use a real FFT or a complex FFT by setting the imaginary part of
- * the signal to 0.
+ * can either use a real FFT or a complex FFT (set the imaginary portion of
+ * the signal to 0).
  * https://www.ni.com/docs/en-US/bundle/labview/page/lvanlsconcepts/lvac_real_complex_fft.html
  */
 
@@ -56,7 +56,7 @@ void fft_unformatted_64(uint32_t out[], uint32_t in[], uint16_t real[], uint16_t
  * @param out   output buffer (256 elements)
  * @param in    input buffer (256 elements)
  */
-void fft_formatted_256(uint32_t out, uint32_t in[]);
+void fft_formatted_256(uint32_t out[], uint32_t in[]);
 
 /**
  * @brief Fast fourier transform with 64 elements. Pass in the real and the
@@ -82,7 +82,7 @@ void fft_unformatted_256(uint32_t out[], uint32_t in[], uint16_t real[], uint16_
  * @param out   output buffer (1024 elements)
  * @param in    input buffer (1024 elements)
  */
-void fft_formatted_1024(uint32_t out, uint32_t in[]);
+void fft_formatted_1024(uint32_t out[], uint32_t in[]);
 
 /**
  * @brief Fast fourier transform with 1024 elements. Pass in the real and the
