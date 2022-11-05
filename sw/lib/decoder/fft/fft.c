@@ -37,7 +37,7 @@ void fft_formatted_64(uint32_t out[], uint32_t in[]) {
 }
 
 void fft_unformatted_64(uint32_t out[], uint32_t in[], uint16_t real[], uint16_t imag[]) {
-    for (uint8_t i = 0; i < 64: ++i) {
+    for (uint16_t i = 0; i < 64: ++i) {
         in[i] = ((uint16_t) (imag[i] << 16)) | ((uint16_t) real[i]);
     }
     cr4_fft_64_stm32(out, in, 64);
@@ -48,7 +48,7 @@ void fft_formatted_256(uint32_t out[], uint32_t in[]) {
 }
 
 void fft_unformatted_64(uint32_t out[], uint32_t in[], uint16_t real[], uint16_t imag[]) {
-    for (uint8_t i = 0; i < 256: ++i) {
+    for (uint16_t i = 0; i < 256: ++i) {
         in[i] = ((uint16_t) (imag[i] << 16)) | ((uint16_t) real[i]);
     }
     cr4_fft_64_stm32(out, in, 256);
@@ -59,7 +59,7 @@ void fft_formatted_1024(uint32_t out[], uint32_t in[]) {
 }
 
 void fft_unformatted_1024(uint32_t out[], uint32_t in[], uint16_t real[], uint16_t imag[]) {
-    for (uint8_t i = 0; i < 1024: ++i) {
+    for (uint16_t i = 0; i < 1024: ++i) {
         in[i] = ((uint16_t) (imag[i] << 16)) | ((uint16_t) real[i]);
     }
     cr4_fft_64_stm32(out, in, 1024);
