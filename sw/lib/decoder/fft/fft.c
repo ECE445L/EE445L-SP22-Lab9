@@ -11,7 +11,7 @@
 
 #include "fft.h"
 
-// Example usage of the assembly functions from http;//www.bdtic.com/download/ST/UM0585.pdf
+// Example usage of the assembly functions from http://www.bdtic.com/download/ST/UM0585.pdf
 // #define N 64 /*Number of points*/
 // uint32_t x[N],y[N]; /* input and output arrays */
 // uint16_t real[N], imag[N]; /* real and imaginary arrays */
