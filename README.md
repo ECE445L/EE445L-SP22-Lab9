@@ -1,337 +1,54 @@
 # Lab 9 Audio Communication System
 
-## Table of Contents
+ECE445L Lab 9 Template.
 
-- [Lab 9 Audio Communication System](#lab-9-audio-communication-system)
-  - [Table of Contents](#table-of-contents)
-  - [0 Repository Structure](#0-repository-structure)
-    - [0.1 HW](#01-hw)
-    - [0.2 SW](#02-sw)
-    - [0.3 Resources](#03-resources)
-    - [0.4 Git and Github](#04-git-and-github)
-  - [1 Summary](#1-summary)
-    - [1.1 Goals](#11-goals)
-    - [1.2 Team Size](#12-team-size)
-    - [1.3 Review](#13-review)
-    - [1.4 Starter Files](#14-starter-files)
-    - [1.5 Required Hardware](#15-required-hardware)
-    - [1.6 Background](#16-background)
-      - [1.6.1 Concepts](#161-concepts)
-      - [1.6.2 Communication System](#162-communication-system)
-        - [1.6.2.1 Input](#1621-input)
-        - [1.6.2.2 Input -> Encoder](#1622-input---encoder)
-        - [1.6.2.3 Encoder](#1623-encoder)
-        - [1.6.2.4 Encoder -> DAC](#1624-encoder---dac)
-        - [1.6.2.5 DAC](#1625-dac)
-        - [1.6.2.6 DAC -> ADC](#1626-dac---adc)
-        - [1.6.2.7 ADC](#1627-adc)
-        - [1.6.2.8 ADC -> Decoder](#1628-adc---decoder)
-        - [1.6.2.9 Decoder](#1629-decoder)
-        - [1.6.2.10 Decoder -> Display](#16210-decoder---display)
-        - [1.6.2.11 Display](#16211-display)
-  - [2 Preparation](#2-preparation)
-    - [2.1 Choose Encoding/Decoding Scheme](#21-choose-encodingdecoding-scheme)
-    - [2.2 Choose Message Format](#22-choose-message-format)
-    - [2.3 Distribute Tasks](#23-distribute-tasks)
-    - [2.4 Hardware Design](#24-hardware-design)
-    - [2.5 Software Design](#25-software-design)
-    - [2.6 Preparation Deliverables](#26-preparation-deliverables)
-  - [3 Procedure](#3-procedure)
-    - [3.1 Encoder](#31-encoder)
-    - [3.2 Decoder](#32-decoder)
-    - [3.3 Combining the Encoder and Decoder](#33-combining-the-encoder-and-decoder)
-  - [4 Checkout](#4-checkout)
-  - [5 Report](#5-report)
-    - [5.1 Deliverables](#51-deliverables)
-    - [5.2 Analysis and Discussion Questions](#52-analysis-and-discussion-questions)
+![Lab 9 README](Lab09.docx)
 
----
+IMPORTANT (for those not using Github Classroom): To clone this repository,
+click the green "Use this template" button and create a PRIVATE repository. Do
+NOT clone this repository as you would normally clone a git repo (i.e. using
+'git clone ...') because you will not be able to make a private fork.
 
-## 0 Repository Structure
+## HW
 
-The typical explanation for the repo structure. Lab specific instructions can be found further below.
+The hw folder should contain your schematic and board files for your PCB or
+circuits. In later labs, you will be creating schematics for your circuit
+in EAGLE. A setup tutorial can be found
+[here](https://www.shawnvictor.net/autodesk-eagle.html).
 
-### 0.1 HW
+## SW
 
-The `hw` folder should contain your schematic and board files for your PCB or circuits. In labs 1-5 and 10, you will be creating schematics for your circuit in EAGLE. A setup tutorial can be found [here](https://www.shawnvictor.net/autodesk-eagle.html).
+The sw folder should contain your application firmware and software written for
+the lab. The sw/inc folder contains firmware drivers written for you by
+Professor Valvano. Feel free to write your own (in fact, in some labs, you may
+be required to write your own).
 
-### 0.2 SW
+You can place any other source files in the sw/ folder. TAs will look at the
+files you create and/or modify for software quality and for running your
+project.
 
-The `sw` folder should contain your application firmware and software written for the lab. The `sw/inc` folder contains firmware drivers written for you by Professor Valvano. Feel free to write your own (in fact, in some labs, you may be required to write your own).
+## Resources
 
-You can place any other source files in the `sw` folder. TAs will look at the files you create and/or modify for software quality and for running your project.
+A couple files are provided in the Resources folder so you don't have to keep
+searching for that one TI document. Some of them are immediately useful, like
+the TM4C datasheet. Others may be useful for your final project, like the
+TM4C_System_Design_Guidelines page.
 
-### 0.3 Resources
+## Git and Github
 
-A couple files are provided in the Resources folder so you don't have to keep searching for that one TI document. Some of them are immediately useful, like the TM4C datasheet. Others may be useful for your final project, like the TM4C_System_Design_Guidelines page.
-
-### 0.4 Git and Github
-
-We will extensively use Git and Github for managing lab projects. This makes it easier for TAs to grade and help debug the project by allowing us to see commit histories, maintain a common project structure, and likewise, it makes it easier for students to collaborate with partners, merge different codebases, and to debug their work by having a history of commits.
+We will extensively use Git and Github for managing lab projects. This makes it
+easier for TAs to grade and help debug the project by allowing the students to
+see commit histories, maintain a common project structure, collaborate with
+partners, merge different codebases, and to debug work.
 
 Two common ways of using Git and Github are [Github Desktop](https://desktop.github.com/) and the [command line](https://git-scm.com/downloads). [Tutorials](https://dev.to/mollynem/git-github--workflow-fundamentals-5496) are also abundant on the net for you to peruse. We've provided a cheatsheet for git in the Resources folder.
 
-It is highly recommended to make the most out of Git, even if you've never used it before. Version control will save you a lot of suffering, and tools like Git or SVN are ubiquitous in the industry.
-
-A gitignore file is added to the root of this repo that may prevent specific files from being tagged to the repo. This are typically autogenerated output
-files we don't care about, but sometimes other stuff (like .lib files) falls through that we want. Feel free to modify if necessary.
-
----
-
-## 1 Summary
-
-### 1.1 Goals
-
-1. Study ADC conversion and the Nyquist Theorem
-2. Characterize the performance of the DAC and ADC
-3. Encode information as a sound output from a DAC to a speaker
-4. Decode information from a sound input from a microphone to an ADC
-5. Develop an audio communication system
-
-### 1.2 Team Size
-
-The team size is 4
-
-> "FORE!!!!" - some golf person
-
-### 1.3 Review
-
-1. Operation of the ADC system in the TM4C123GH6PM data sheet
-2. Valvano Section 6.2 on periodic interrupts using the timer
-3. Valvano Section 7.5 on SSI interfacing
-4. Valvano Section 8.4 on DAC parameters and waveform generation
-
-### 1.4 Starter Files
-
-1. [`Lab9.c`](sw/Lab9.c)
-2. [`adc.c`](sw/lib/decoder/adc/adc.c)
-3. [`adc.h`](sw/lib/decoder/adc/adc.h)
-4. [`display.c`](sw/lib/decoder/display/display.c)
-5. [`display.h`](sw/lib/decoder/display/display.h)
-6. [`fft.c`](sw/lib/decoder/fft/fft.c)
-7. [`fft.h`](sw/lib/decoder/fft/fft.h)
-8. [`switches.c`](sw/lib/encoder/switches/switches.c)
-9. [`switches.h`](sw/lib/encoder/switches/switches.h)
-10. [`tlv5616.c`](sw/lib/encoder/tlv5616/tlv5616.c)
-11. [`tlv5616.h`](sw/lib/encoder/tlv5616/tlv5616.h)
-12. [`cr4_fft_64_stm32.s`](sw/inc/cr4_fft_64_stm32.s)
-13. [`cr4_fft_256_stm32.s`](sw/inc/cr4_fft_256_stm32.s)
-14. [`cr4_fft_1024_stm32.s`](sw/inc/cr4_fft_1024_stm32.s)
-
-*Note: the starter code written for this lab is fairly sparse*
-
-### 1.5 Required Hardware
-
-| Part                        | Datasheet                                                       |
-|-----------------------------|-----------------------------------------------------------------|
-| EK-TM4C123GXL               | [TM4C123GH6PM datasheet](resources/TM4C_Datasheet.pdf)          |
-| 8Ω or 32Ω speaker           | N/A                                                             |
-| Electret microphone         | [CMA-4544PF-W datasheet](resources/datasheets/cma-4544pf-w.pdf) |
-| OPA2350PA                   | [OPAx350 datasheet](resources/datasheets/opax350.pdf)           |
-| TLV5616 12-bit DAC          | [TLV5616 datasheet](resources/datasheets/tlv5616.pdf)           |
-| LM4041CILPR shunt diode     | [LM4041C datasheet](resources/datasheets/lm4041c.pdf)           |
-| TPA731 audio amp            | [TPA731 datasheet](resources/datasheets/tpa731.pdf)             |
-| MC34119 (discontinued)      | [MC34119 datasheet](resources/datasheets/mc34119.pdf)           |
-| Resistors and capacitors    | N/A                                                             |
-
-### 1.6 Background
-
-#### 1.6.1 Concepts
-
-This lab introduces the student to the field of audio signal processing. According to [Wikipedia](https://en.wikipedia.org/wiki/Audio_signal_processing):
-
-> Audio signal processing is a subfield of signal processing that is concerned with the electronic manipulation of audio signals. Audio signals are electronic representations of sound waves—longitudinal waves which travel through air, consisting of compressions and rarefactions. The energy contained in audio signals is typically measured in decibels. As audio signals may be represented in either digital or analog format, processing may occur in either domain. Analog processors operate directly on the electrical signal, while digital processors operate mathematically on its digital representation.
-
-These signals are in the range of 200Hz to 16000Hz and include speech and musical instruments. We will be processing the signals in the digital domain, therefore we need to convert them from the analog domain to the digital domain. The Nyquist Theorem specifies that an analog signal waveform can be converted into a digital signal by sampling the analog signal at equal to, or greater than, twice the highest frequency component in the analog signal.
-
-What is the Valvano Postulate?
-
-#### 1.6.2 Communication System
-
-![Figure 9.1](resources/figures/figure_9.1.jpg)
-
-*Figure 9.1: data-flow diagram of the communication system*
-
-##### 1.6.2.1 Input
-
-The input to the system can arrive whatever source you wish, as long as the human operator controls the values in some fashion. You could input characters from the PC keyboard and input them into the microcontroller using UART. You could input data from switches. The input task must run in the background using interrupts. Think about the appropriate priority level for this task.
-
-##### 1.6.2.2 Input -> Encoder
-
-The linkage between these modules must include a data structure that supports streaming, such as a FIFO or double buffer. A level of abstraction must be created by designing a set (two or more) of public functions the input module can call to affect communication.
-
-##### 1.6.2.3 Encoder
-
-Each communication effort will involve a message, which includes data, synchronization, and error checking. You are free to create whatever encoding mechanism you wish. However, consider encoding each n-bit symbol as a specific frequency output for a fixed time (frequency modulation). One of the challenges will be synchronize the receiver to the transmitter. Even if the receiver knows you are sending a symbol encoding 2 bits of data every 10 ms, how does the receiver know where symbol ends and the next symbol starts? Consider a protocol where subsequent symbols always switch frequencies, even if the data were to remain constant. In Lab 5, recall that you set up a free running sine wave routine that can generate a wide range of sounds from 300 Hz to 1000 Hz. You will use that capability to encode data using sine waves (300 Hz and 1000 Hz). There are no particular requirements to maximize bandwidth (information/sec), minimize latency (time from input to output), or eliminate errors (sound noise causing bits to flip). However, you will be asked to quantify each of these performance measures and discuss in your report how each could have been improved. The encoder task also runs in the background using interrupts. Think about the appropriate priority level for this task. Remember there is a streaming data structure, so this interrupt task is different from the input task.
-
-##### 1.6.2.4 Encoder -> DAC
-
-The encoded message is sent to the DAC module in an appropriate manner that you will design. For example it might be an array of frequencies. The linkage between these modules also must include a data structure that supports streaming. However, you may wish to place all transmission tasks (encoder and DAC) into the same software file.
-
-##### 1.6.2.5 DAC
-
-Please use as much of your Lab5 as possible, because the DAC does output to the speaker to send data across the communication channel. Since this interrupt will be high frequency, make sure it is very simple. Think about the appropriate priority level for this task.
-
-##### 1.6.2.6 DAC -> ADC
-
-**There must be a software disconnect between the transmitter tasks (input, encoder, and DAC) from the receiver tasks (ADC, decode, display).** There can be no shared data or function calls between them. The only linkage should be sound traveling as air pressure.
-
-##### 1.6.2.7 ADC
-
-The audio input is filtered and then sampled by an ADC. The sampling rate is controlled by a periodic timer that triggers the ADC, and the ADC ISR executes when the conversion is complete. Because the timer starts the ADC, there is no sampling jitter. Think about the appropriate priority level for this task. How does the timer-triggered sampling affect the selection of priority for this ISR? Since this interrupt will also be high frequency, make sure it is very simple. However, you should implement digital filtering here to improve SNR.
-
-##### 1.6.2.8 ADC -> Decoder
-
-The linkage between these modules also must include a data structure that supports streaming.
-
-##### 1.6.2.9 Decoder
-
-You can run the decoder in the while-loop of main. The goal is to extract the data from the sampled sound. The system is considered real time if the software is fast enough to keep up (no data is lost). If the decoder cannot keep, up you can slow down the transmission rate or use a simpler decoding algorithm. Possibilities include but are not limited to: cross correlation and FFT. There are three very fast integer FFT functions in the `inc` folder of the starter projects: [`cr4_fft_64_stm32.s`](sw/inc/cr4_fft_64_stm32.s), [`cr4_fft_256_stm32.s`](sw/inc/cr4_fft_256_stm32.s) [`cr4_fft_1024_stm32.s`](sw/inc/cr4_fft_1024_stm32.s).
-
-##### 1.6.2.10 Decoder -> Display
-
-The linkage between these modules can be a simple function call.
-
-##### 1.6.2.11 Display
-
-This task is run from the main program. It outputs the data to the human operator. The output can use whatever device you wish, as long as the human operator obverse the values in some fashion. You could output characters on the LCD. You could output data to LEDs. During testing, when the input is created with data of known values, the output can check for lost or changed values.
-
----
-
-## 2 Preparation
-
-### 2.1 Choose Encoding/Decoding Scheme
-
-1. Create a rough sketch of the sound waves you plan to use to transmit data
-2. In other words, how are you going to represent data with sound?
-3. Possible data representations:
-   1. Frequency modulation:
-      1. `0`: low frequency
-      2. `1`: high frequency
-   2. Ampliture modulation:
-      1. `0`: low amplitude
-      2. `1`: high amplitude
-
-### 2.2 Choose Message Format
-
-1. Add something to support error checking (like a checksum or parity bit)
-2. Add something that will allow the receiver to synchronize to the transmitter
-3. How will the receiver separate one bit from another?
-
-*Hint: how does UART separate bits?*
-
-### 2.3 Distribute Tasks
-
-1. The work must be distributed equally amongst the team members
-2. Possible tasks include:
-
-| Task                              | Description                                                                                                              |
-|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| System Design and Integration     | Design of the encoding and decoding algorithm                                                                            |
-| Input                             | Interface hardware, low-level software drivers, a main program to test the streaming                                     |
-| Input -> Encoder                  | Streaming data structure, `.c` and `.h` files, a main program to test the streaming                                      |
-| Encoder                           | Software to implement encoding                                                                                           |
-| Encoder -> DAC                    | Streaming data structure, `.c` and `.h` files, a main program to test the streaming                                      |
-| DAC Hardware                      | Interface the DAC, amplifier, and speaker                                                                                |
-| DAC Software                      | ISR that reads from the appropriate data structure and writes to the DAC                                                 |
-| Transmitter Testing               | A main program to test the behavior of the transmitter                                                                   |
-| Microphone Amplifier Hardware     | Design and build the sound input hardware                                                                                |
-| ADC Software                      | ISR that reads from the ADC and writes to the appropriate data structure, a main program to test the ADC input software  |
-| ADC -> Decoder                    | Streaming data structure, `.c` and `.h` files, a main program to test the streaming                                      |
-| Decoder                           | Method and software to implement signal processing like cross correlation or FFT, a main program to test the encoder     |
-| Display                           | Interface hardware, low-level software drivers, a main program to test the streaming                                     |
-| System Performance Measurements   | Final system performance testing (bandwidth, latency, reliability)                                                       |
-
-### 2.4 Hardware Design
-
-1. Collect all hardware components
-2. Draw all circuit diagrams
-
-![Figure 9.2](resources/figures/figure_9.2.png)
-
-*Figure 9.2: schematic of the filtered electret microphone circuit using an OPA350N*
-
-### 2.5 Software Design
-
-1. Design all data structures, modules, and testing procedures
-2. Write all header files and structs
-
-![Figure 9.3](resources/figures/figure_9.3.jpg)
-
-*Figure 9.3: possible call graph of the communication system and relevent questions to consider*
-
-### 2.6 Preparation Deliverables
-
-1. Sketch of the encoding/decoding scheme
-2. Explanation of the message format
-3. List of distributed tasks
-4. `.sch` files for both the encoding and decoding systems
-5. `.h` files and structs
-
----
-
-## 3 Procedure
-
-*Note: each of the modules should be implemented and tested separately*
-
-### 3.1 Encoder
-
-1. Tweak output parameters (sine wave table size, encoding scheme, time per bit) until the waveforms look appropriate on the scope connected to the DAC output
-2. Capture scope traces of the output data for the lab report
-
-### 3.2 Decoder
-
-1. Capture a trace of the ADC input from a constant waveform
-2. Test the ADC software: dump the ADC sampled waveform to see whether the input is correct
-3. Store the sampled waveform lab report
-
-### 3.3 Combining the Encoder and Decoder
-
-1. Output a constant known data stream from the encoder system
-2. Verify the decoder can decode the data stream correctly when the room is relatively quiet
-3. Profile the system's modules' relative percentage execution times with a real logic analyzer
-4. Quantify the system's performance:
-   1. Bandwidth (information bits/sec)
-   2. Latency (time from input to display)
-   3. Reliability (percentage of bits properly communicated)
-5. Repeat performance measurements when you are speaking within 5 feet of the microphone
-6. Test the system with human inputs
-
----
-
-## 4 Checkout
-
-1. Demonstrate the system with a known input and input rate
-   1. Show scope on the DAC output
-   2. Show scope on the ADC input
-2. Demonstrate the system with user input
-3. Explain the encoding/decoding scheme
-4. Explain how your receiver synchronizes to the transmitter
-
----
-
-## 5 Report
-
-### 5.1 Deliverables
-
-1. Objectives (1/2 page maximum)
-2. Hardware design (schematics of both the encode and decoder systems)
-3. Software design
-   1. Data flow graph if different from 
-4. Performance data
-   1. DAC output spectrum of a single tone
-      1. Calculate SNR
-   2. DAC scope of an encoded message
-   3. ADC input spectrum of a single tone
-      1. Calculate SNR
-      2. Compare with the DAC output
-   4. Typical sampled ADC data of a message
-   5. Logic analyzer profile showing relative percentage time to execute all modules
-   6. Bandwidth, latency, reliability with and without background sounds
-
-### 5.2 Analysis and Discussion Questions
-
-1. What is the Nyquist theorem and how does it apply to this lab?
-2. How did you eliminate noise in the sampled audio?
-3. How does your protocol allow (or doesn't allow) communication in the presence of background speech and singing?
-4. How could bandwidth have been improved?
+It is highly recommended to make the most out of Git, even if you've never used
+it before. Version control will save you a lot of suffering, and tools like Git
+or SVN are ubiquitous in the industry.
+
+## Lab Report
+
+Following the lab doc provided at the root of this project, the TAs request you
+submit a lab report in Microsoft Word (or Pages, if you're a Mac user). Please
+name it `EID_lab_LAB_NUMBER_report.pdf`.
