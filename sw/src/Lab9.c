@@ -12,14 +12,14 @@
  *     Teams are allowed to choose an encoding scheme to transmit their
  *     information over the speaker. They need to be able to discuss and profile
  *     the execution latency, bandwidth, and SNR of their implementation.
- * @version 0.1
- * @date 2022-11-01
+ * @version 0.2
+ * @date 2023-03-28
  * 
  * @copyright Copyright (c) 2022
  */
 
 /**
- * @note Modify __MAIN__ on L41 to determine which main method is executed.
+ * @note Modify __MAIN__ on L28 to determine which main method is executed.
  *   __MAIN__ = 0 or ENCODER - run the encoder main
  *              1 or DECODER - run the decoder main
  */
@@ -29,14 +29,15 @@
 
 /* Include relevant files for the encoder depending on the value of __MAIN__ */
 #if __MAIN__ == ENCODER
-    /* you can include/uninclude encoder files as you see fit here */
+    /* You can include/uninclude encoder files as you see fit here. */
     #include "./lib/encoder/switches/switches.h"
     #include "./lib/encoder/tlv5616/tlv5616.h"
 #elif __MAIN__ == DECODER
-    /* you can include/uninclude encoder files as you see fit here */
+    /* You can include/uninclude encoder files as you see fit here. */
     #include "./lib/decoder/adc/adc.h"
     #include "./lib/decoder/display/display.h"
-    #include "./lib/fft/fft.h"
+    #include "./lib/decoder/fft/fft.h"
+    /* Filters are also provided in /lib/Filters. */
 #endif
 
 #if __MAIN__ == ENCODER

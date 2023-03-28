@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>rvmdk PART_LM4F120H5QR</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SW</IncludePath>
+              <IncludePath>.;..</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -392,7 +392,47 @@
             <File>
               <FileName>startup.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\inc\startup.s</FilePath>
+              <FilePath>..\inc\startup.s</FilePath>
+            </File>
+            <File>
+              <FileName>switches.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\encoder\switches\switches.c</FilePath>
+            </File>
+            <File>
+              <FileName>tlv5616.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\encoder\tlv5616\tlv5616.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\decoder\adc\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\decoder\display\display.c</FilePath>
+            </File>
+            <File>
+              <FileName>fft.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\decoder\fft\fft.c</FilePath>
+            </File>
+            <File>
+              <FileName>cr4_fft_64_stm32.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\inc\cr4_fft_64_stm32.s</FilePath>
+            </File>
+            <File>
+              <FileName>cr4_fft_256_stm32.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\inc\cr4_fft_256_stm32.s</FilePath>
+            </File>
+            <File>
+              <FileName>cr4_fft_1024_stm32.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\inc\cr4_fft_1024_stm32.s</FilePath>
             </File>
           </Files>
         </Group>

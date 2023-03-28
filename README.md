@@ -2,6 +2,8 @@
 
 ECE445L Lab 9 Template.
 
+**NOTE: CCS will not compile for this project, since there are some assembly files in ARMASM syntax, and CCS needs ARMCLANG syntax.**
+
 ![Lab 9 README](Lab09.docx)
 
 IMPORTANT (for those not using Github Classroom): To clone this repository,
